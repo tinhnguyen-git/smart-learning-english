@@ -1,0 +1,9 @@
+flutter_sdk/
+flutter/
+*.tar.xz
+mobile/build/
+mobile/.dart_tool/
+mobile/.packages
+mobile/.pub/
+mobile/.flutter-plugins
+mobile/.flutter-plugins-dependencies

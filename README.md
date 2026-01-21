@@ -12,3 +12,15 @@ An toàn (Sandboxing): Thư mục .devcontainer đã sẵn sàng. Khi mở Antig
 Di động (Mobile): Script setup_android.sh sẽ tự động cài Android Command Line Tools bên trong Container, cho phép Agent chạy lệnh flutter build apk mà không cần bạn cài Android Studio nặng nề trên máy thật.
 
 Hạ tầng (Infra): File infra/docker/docker-compose.yml đã sẵn sàng để Agent bật Database PostgreSQL lên chỉ với 1 lệnh.
+
+## Mobile Development Setup
+**Prerequisites:**
+- Flutter SDK is installed locally in `workspace/smart-learning-english/flutter` (since it wasn't available in the environment).
+- Add the following to your path or use the direct path to run commands:
+  ```bash
+  export PATH="$PATH:$(pwd)/flutter/bin"
+  ```
+
+## Project Structure
+- `backend/`: Go
+- `mobile/`: Flutter (Clean Architecture)
