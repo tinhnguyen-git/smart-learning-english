@@ -6,7 +6,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/gocolly/colly/v2"
+	"github.com/go-rod/rod"
+	"github.com/go-rod/rod/lib/launcher"
 	"smart-learning-english/backend/internal/core/domain"
 	"smart-learning-english/backend/internal/core/ports"
 )
@@ -20,45 +21,73 @@ func NewScraperService(repo ports.StoryRepository) ports.ScraperService {
 }
 
 func (s *ScraperService) ScrapeAndSave(ctx context.Context, url string) (*domain.Story, error) {
-	c := colly.NewCollector()
+	// Launch headless browser
+	l := launcher.New().Headless(true).MustLaunch()
+	browser := rod.New().ControlURL(l).MustConnect()
+	defer browser.MustClose()
 
+	// Navigate to page and wait for content
+	page := browser.MustPage(url)
+	page.MustWaitLoad()
+
+	// Wait for dynamic content (JavaScript rendering)
+	time.Sleep(3 * time.Second)
+
+	// Extract title
 	var title string
-	var contentBuilder strings.Builder
-
-	// Attempt to find title
-	c.OnHTML("h1", func(e *colly.HTMLElement) {
-		if title == "" {
-			title = strings.TrimSpace(e.Text)
-		}
-	})
-
-	// Very basic content extraction: Grab all paragraphs
-	// This will likely need refinement for specific domains to avoid footer/nav text
-	c.OnHTML("p", func(e *colly.HTMLElement) {
-		text := strings.TrimSpace(e.Text)
-		if len(text) > 20 { // Filter out very short lines
-			contentBuilder.WriteString(text)
-			contentBuilder.WriteString("\n\n")
-		}
-	})
-
-	err := c.Visit(url)
-	if err != nil {
-		return nil, fmt.Errorf("scraping failed: %w", err)
+	titleEl, err := page.Element("h1")
+	if err == nil && titleEl != nil {
+		title, _ = titleEl.Text()
 	}
-
-	content := contentBuilder.String()
-	if content == "" {
-		return nil, fmt.Errorf("no content found at url")
-	}
-
 	if title == "" {
 		title = "Untitled Story"
 	}
 
+	// Extract content - try common content selectors
+	var contentBuilder strings.Builder
+	contentSelectors := []string{
+		"div.chapter-content p",      // Common novel site
+		"div.content p",              // Generic
+		"article p",                  // Blog style
+		"div.text-content p",         // Alternative
+		"div.story-content p",        // Story sites
+		"div#chapter-content p",      // ID based
+		"p",                          // Fallback to all paragraphs
+	}
+
+	for _, selector := range contentSelectors {
+		elements, err := page.Elements(selector)
+		if err == nil && len(elements) > 0 {
+			for _, el := range elements {
+				text, _ := el.Text()
+				text = strings.TrimSpace(text)
+				if len(text) > 30 { // Filter short/navigation text
+					contentBuilder.WriteString(text)
+					contentBuilder.WriteString("\n\n")
+				}
+			}
+			if contentBuilder.Len() > 100 {
+				break // Found enough content
+			}
+		}
+	}
+
+	content := contentBuilder.String()
+	if content == "" {
+		// Fallback: get all visible text
+		body, err := page.Element("body")
+		if err == nil && body != nil {
+			content, _ = body.Text()
+		}
+	}
+
+	if strings.TrimSpace(content) == "" {
+		return nil, fmt.Errorf("no content found at url")
+	}
+
 	story := &domain.Story{
-		Title:     title,
-		Content:   content,
+		Title:     strings.TrimSpace(title),
+		Content:   strings.TrimSpace(content),
 		SourceURL: url,
 		CreatedAt: time.Now(),
 	}

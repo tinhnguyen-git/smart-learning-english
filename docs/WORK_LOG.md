@@ -24,8 +24,9 @@
 | Story Scraper | N/A | ✅ | ✅ | Done |
 | Premium Upgrade | ⬜ | ✅ | ✅ | Done |
 
-## KNOWN BUGS
-- None yet.
+## KNOWN ISSUES
+- **Scraped stories not appearing in Story Approval**: Stories imported via Scraper are saved to DB but don't show up in the Story Approval UI (needs API integration).
+- **No English Learning conversion**: Scraped content is not yet converted to English learning materials (vocabulary extraction, difficulty analysis, etc.).
 
 ## LOG HISTORY
 - **2026-01-21**: Integrated Web Frontend with Backend.
@@ -34,3 +35,5 @@
     - Added Login, Register, Profile pages.
     - Fixed DB_HOST to use container name `postgres` after joining devcontainer to `docker_default` network.
     - Enabled CORS on Backend.
+    - Upgraded Scraper to use `rod` headless browser (bypasses Cloudflare/JS-rendered pages).
+    - Fixed Logout button in sidebar.
