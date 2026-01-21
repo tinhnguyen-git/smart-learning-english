@@ -1,0 +1,27 @@
+{
+  "name": "Antigravity Super-Environment (Go/Flutter/Angular)",
+  "image": "mcr.microsoft.com/devcontainers/base:ubuntu-22.04",
+  "features": {
+    "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {},
+    "ghcr.io/devcontainers/features/go:1": { "version": "1.21" },
+    "ghcr.io/devcontainers/features/node:1": { "version": "18" },
+    "ghcr.io/devcontainers/features/python:1": { "version": "3.11" },
+    "ghcr.io/devcontainers/features/java:1": { "version": "17" }
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "golang.go",
+        "Dart-Code.flutter",
+        "angular.ng-template",
+        "ms-azuretools.vscode-docker"
+      ]
+    }
+  },
+  "runArgs": [
+    "--privileged",
+    "-v", "/dev/bus/usb:/dev/bus/usb"
+  ],
+  "postCreateCommand": "bash .devcontainer/setup_android.sh",
+  "remoteUser": "vscode"
+}

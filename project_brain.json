@@ -1,0 +1,19 @@
+{
+  "meta_data": {
+    "project_name": "English Learning SuperApp",
+    "version": "1.0.0",
+    "last_updated": "2026-01-21T15:00:00Z",
+    "stack": {
+      "mobile": "Flutter (Clean Arch + BLoC)",
+      "web": "Angular + TailwindCSS",
+      "backend": "Go (Microservices + DDD)",
+      "database": "PostgreSQL"
+    }
+  },
+  "context_state": {
+    "current_phase": "Initialization",
+    "active_sprint_goals": [],
+    "blocking_issues": []
+  },
+  "architectural_decision_records": []
+}
