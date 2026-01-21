@@ -1,0 +1,41 @@
+<div class="space-y-6">
+    <!-- Add New Ad -->
+    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+        <h2 class="text-lg font-semibold text-gray-800 mb-4">Inject Affiliate Ad</h2>
+        <div class="flex flex-col gap-4">
+            <textarea [(ngModel)]="newAdCode" rows="4" placeholder="Paste HTML/JS code here..."
+                class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 bg-gray-50 p-3"></textarea>
+            <div class="flex justify-end">
+                <button (click)="addAd()"
+                    class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-lg transition-colors">
+                    Inject Ad
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Active Ads List -->
+    <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+        <div class="px-6 py-4 border-b border-gray-200">
+            <h3 class="text-md font-medium text-gray-700">Active Placements</h3>
+        </div>
+        <div class="divide-y divide-gray-200">
+            <div *ngFor="let ad of activeAds" class="p-6 flex justify-between items-start">
+                <div class="flex-1 mr-4">
+                    <pre class="bg-gray-800 text-gray-100 p-3 rounded-md text-xs overflow-x-auto">{{ ad.code }}</pre>
+                    <div class="mt-2 flex items-center text-sm text-gray-500 space-x-4">
+                        <span>Impressions: {{ ad.impressions }}</span>
+                        <span [class.text-green-600]="ad.active" [class.text-gray-400]="!ad.active" class="font-medium">
+                            {{ ad.active ? 'Active' : 'Inactive' }}
+                        </span>
+                    </div>
+                </div>
+                <button (click)="toggleStatus(ad)" [class.bg-red-50]="ad.active" [class.text-red-600]="ad.active"
+                    [class.bg-green-50]="!ad.active" [class.text-green-600]="!ad.active"
+                    class="px-3 py-1 rounded-md text-sm font-medium transition-colors">
+                    {{ ad.active ? 'Disable' : 'Enable' }}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

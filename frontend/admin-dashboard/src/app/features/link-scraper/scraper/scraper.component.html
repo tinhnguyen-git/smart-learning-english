@@ -1,0 +1,37 @@
+<div class="max-w-3xl mx-auto space-y-6">
+    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-8 text-center">
+        <h2 class="text-2xl font-bold text-gray-800 mb-2">Link Scraper</h2>
+        <p class="text-gray-500 mb-6">Enter a URL to extract content and create a new story.</p>
+
+        <div class="flex gap-2 max-w-xl mx-auto">
+            <input [(ngModel)]="url" type="url" placeholder="https://example.com/article"
+                class="flex-1 rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 bg-gray-50 p-3">
+            <button (click)="scrape()" [disabled]="loading || !url"
+                class="bg-blue-600 hover:bg-blue-700 disabled:bg-blue-300 text-white font-medium py-3 px-6 rounded-lg transition-colors flex items-center">
+                <span *ngIf="loading" class="animate-spin mr-2">⟳</span>
+                {{ loading ? 'Scraping...' : 'Scrape' }}
+            </button>
+        </div>
+    </div>
+
+    <!-- Results -->
+    <div *ngIf="result" class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden animate-fade-in">
+        <div class="p-6 border-b border-gray-200 bg-gray-50 flex justify-between items-center">
+            <h3 class="font-semibold text-gray-800">Scrape Result</h3>
+            <button (click)="importToStory()" class="text-blue-600 hover:text-blue-800 font-medium text-sm">Import as
+                Story</button>
+        </div>
+        <div class="p-6">
+            <div class="flex gap-6">
+                <!-- <img [src]="result.image" class="w-32 h-32 object-cover rounded-md bg-gray-200"> -->
+                <div class="flex-1 space-y-2">
+                    <h4 class="text-xl font-bold text-gray-900">{{ result.title }}</h4>
+                    <p class="text-gray-600">{{ result.description }}</p>
+                    <div class="mt-4 p-4 bg-gray-50 rounded text-sm text-gray-500">
+                        {{ result.content }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
